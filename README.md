@@ -18,3 +18,5 @@ pyglet
 * Load from menu, rather than just through CLI.
 
 Despite the TODO, it does display GFX. Included is a `ch8` file displaying the IBM logo.
+
+![screenshot](screenshots/ibm.png)
