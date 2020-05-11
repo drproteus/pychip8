@@ -97,7 +97,7 @@ class Chip8:
                 if not pixel:
                     continue
                 x = (i % 64) * 10
-                y = (32 - (i // 64)) * 10
+                y = (32 - (i // 64)) * 10 - 10
                 batch.add(
                     4,
                     pyglet.gl.GL_QUADS,
