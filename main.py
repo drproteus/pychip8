@@ -111,7 +111,8 @@ class Chip8:
 
         @window.event
         def on_draw():
-            draw_graphics()
+            if self.draw_flag:
+                draw_graphics()
 
         KEYS = {
             key._1: 0x0001,
