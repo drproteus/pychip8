@@ -1,5 +1,6 @@
 import sys
 import pyglet
+import threading
 from pyglet.window import key
 
 from ctypes import c_uint, c_ubyte, c_ushort
@@ -49,7 +50,7 @@ class Chip8:
     def clear_screen(self):
         self.gfx: List[c_ubyte] = [0,] * (64 * 32)
 
-    def update_timers(self):
+    def update_timers(self, dt):
         if self.delay_timer > 0:
             self.delay_timer -= 1
 
@@ -71,7 +72,6 @@ class Chip8:
         except:
             print("OPCODE FAILED: [0x%02x]" % opcode)
             raise
-        self.update_timers()
 
     def run(self):
         window = pyglet.window.Window(640, 320, "[CHIP-8] %s" % self.path)
@@ -106,13 +106,26 @@ class Chip8:
                     ("c3B", FG_COLOR * 4),
                 )
             batch.draw()
+            # window.flip()
 
-        pyglet.clock.schedule(self.step)
+        def event_loop_thread(window):
+            t = threading.currentThread()
+            while not getattr(window, "closed", False):
+                self.step()
+
+        main_thread = threading.Thread(target=event_loop_thread, args=(window,))
+        pyglet.clock.schedule(self.update_timers)
+
+        @window.event
+        def on_close():
+            window.closed = True
+            window.close()
 
         @window.event
         def on_draw():
             if self.draw_flag:
                 draw_graphics()
+                # self.draw_flag = False
 
         KEYS = {
             key._1: 0x0001,
@@ -146,6 +159,7 @@ class Chip8:
             if KEYS.get(symbol):
                 self.keys[KEYS[symbol]] = 0
 
+        main_thread.start()
         pyglet.app.run()
 
     def fetch_opcode(self):
@@ -330,4 +344,3 @@ if __name__ == "__main__":
     else:
         path = "roms/Chip8 Picture.ch8"
     Chip8(path).run()
-    # Chip8("roms/Keypad Test [Hap, 2006].ch8").run()
