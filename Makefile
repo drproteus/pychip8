@@ -1,6 +1,6 @@
-rom ?= "roms/Chip8 Picture.ch8"
+rom ?= roms/Chip8 Picture.ch8
 run:
-	env/bin/python ./main.py $(rom)
+	env/bin/python ./main.py "$(rom)"
 
 setup-env:
 	python3 -m venv env --prompt chip8
