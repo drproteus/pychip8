@@ -3,7 +3,7 @@ import pyglet
 import threading
 from pyglet.window import key
 
-from ctypes import c_uint, c_ubyte, c_ushort
+from ctypes import c_ubyte, c_ushort
 from typing import List
 from random import randint
 
@@ -12,13 +12,21 @@ from fontset import chip8_fontset
 
 class Chip8:
     def __init__(self, path=None):
-        self.memory: List[c_ubyte] = [0x0,] * 4096
-        self.V: List[c_ubyte] = [0x0,] * 16
+        self.memory: List[c_ubyte] = [
+            0x0,
+        ] * 4096
+        self.V: List[c_ubyte] = [
+            0x0,
+        ] * 16
         self.I: c_ushort = 0
         self.pc: c_ushort = 0x200
 
-        self.gfx: List[c_ubyte] = [0x0,] * (64 * 32)
-        self.keys: List[c_ubyte] = [0x0,] * 16
+        self.gfx: List[c_ubyte] = [
+            0x0,
+        ] * (64 * 32)
+        self.keys: List[c_ubyte] = [
+            0x0,
+        ] * 16
 
         self.delay_timer: c_ubyte = 0x0
         self.sound_timer: c_ubyte = 0x0
@@ -48,7 +56,9 @@ class Chip8:
                 idx += 1
 
     def clear_screen(self):
-        self.gfx: List[c_ubyte] = [0,] * (64 * 32)
+        self.gfx: List[c_ubyte] = [
+            0,
+        ] * (64 * 32)
 
     def update_timers(self, dt):
         if self.delay_timer > 0:
@@ -145,7 +155,7 @@ class Chip8:
             key.C: 0x000B,
             key.V: 0x000F,
         }
-        
+
         @window.event
         def on_key_press(symbol, modifiers):
             if symbol in KEYS:
