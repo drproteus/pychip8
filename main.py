@@ -1,4 +1,5 @@
 import sys
+import os
 import pyglet
 import threading
 from pyglet.window import key
@@ -11,7 +12,7 @@ from fontset import chip8_fontset
 
 
 class Chip8:
-    def __init__(self, path=None):
+    def __init__(self, path=None, debug=False):
         self.memory: List[c_ubyte] = [
             0x0,
         ] * 4096
@@ -41,6 +42,7 @@ class Chip8:
 
         if path:
             self.load_rom(path)
+        self.debug = debug
 
     def load_fontset(self):
         for i, font_byte in enumerate(chip8_fontset):
@@ -73,7 +75,8 @@ class Chip8:
         if self.blocked:
             return
         opcode = self.fetch_opcode()
-        print("OPCODE: [0x%02x]" % opcode)
+        if self.debug:
+            print("OPCODE: [0x%02x]" % opcode)
         # if _dt:
         #     print("%s seconds elapsed since last step." % _dt)
         try:
@@ -353,4 +356,5 @@ if __name__ == "__main__":
         path = sys.argv[1]
     else:
         path = "roms/Chip8 Picture.ch8"
-    Chip8(path).run()
+    debug = int(os.environ.get("DEBUG", 0))
+    Chip8(path, debug=debug).run()
